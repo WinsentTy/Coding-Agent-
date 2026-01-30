@@ -52,13 +52,13 @@
 
 ## Соответствие требованиям
 
-| Требование | Статус | Реализация |
-|------------|--------|------------|
-| GitHub-репозиторий | ✅ | https://github.com/WinsentTy/coding-agent |
-| GitHub Actions workflow | ✅ | `.github/workflows/agents.yml` |
-| Примеры Issues | ✅ | см. https://github.com/WinsentTy/ms-test-2/issues |
-| Примеры Pull Requests | ✅ | см. https://github.com/WinsentTy/ms-test-2/pulls |
-| Отчёт по SDLC | ✅ | Данный документ |
+| Требование | Реализация |
+|------------|------------|
+| GitHub-репозиторий | https://github.com/WinsentTy/coding-agent |
+| GitHub Actions workflow | `.github/workflows/agents.yml` |
+| Примеры Issues | см. https://github.com/WinsentTy/ms-test-2/issues |
+| Примеры Pull Requests | см. https://github.com/WinsentTy/ms-test-2/pulls |
+| Отчёт по SDLC | Данный документ |
 
 ---
 
