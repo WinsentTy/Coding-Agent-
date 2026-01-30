@@ -1,0 +1,85 @@
+name: AI Code Agents
+on:
+  issues:
+    types: [opened, labeled]
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  code-agent:
+    if: github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'agent')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Poetry
+        run: pip install poetry
+      
+      - name: Clone Coding Agents
+        run: |
+          git clone https://github.com/WinsentTy/coding-agent.git /tmp/coding_agents
+          cd /tmp/coding_agents
+          poetry install --no-interaction
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "AI Code Agent"
+          git config --global user.email "agent@example.com"
+      
+      - name: Run Code Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: |
+          cd /tmp/coding_agents
+          poetry run python -m code_agent.main \
+            --repo ${{ github.repository }} \
+            --issue-id ${{ github.event.issue.number }}
+  reviewer-agent:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Poetry
+        run: pip install poetry
+      
+      - name: Clone Coding Agents
+        run: |
+          git clone https://github.com/WinsentTy/coding-agent.git /tmp/coding_agents
+          cd /tmp/coding_agents
+          poetry install --no-interaction
+      
+      - name: Prepare event file
+        run: |
+          echo '${{ toJson(github.event) }}' > /tmp/coding_agents/src/event.json
+      
+      - name: Run Reviewer Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: |
+          cd /tmp/coding_agents
+          poetry run python -m reviewer_agent.main

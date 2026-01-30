@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  agent:
+    build: .
+    volumes:
+      - ./src:/app/src
+      - ./workdir:/app/workdir
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL:-https://api.openai.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4-1106-preview}
+    # По умолчанию показывает справку
+    # Для запуска агента используйте:
+    #   docker-compose run --rm agent python -m code_agent.main --issue-id 1 --repo "owner/repo"
+    command: [ "python", "-m", "code_agent.main", "--help" ]
+
+  # Сервис для отладки (держит контейнер запущенным)
+  debug:
+    build: .
+    volumes:
+      - ./src:/app/src
+      - ./workdir:/app/workdir
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL:-https://api.openai.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4-1106-preview}
+    command: tail -f /dev/null
+    profiles:
+      - debug

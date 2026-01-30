@@ -1,0 +1,55 @@
+{
+  "action": "opened",
+  "number": 1,
+  "pull_request": {
+    "url": "https://api.github.com/repos/test/repo/pulls/1",
+    "id": 1,
+    "html_url": "https://github.com/test/repo/pull/1",
+    "diff_url": "https://github.com/test/repo/pull/1.diff",
+    "patch_url": "https://github.com/test/repo/pull/1.patch",
+    "issue_url": "https://api.github.com/repos/test/repo/issues/1",
+    "number": 1,
+    "state": "open",
+    "title": "Fix bug in main.py",
+    "user": {
+      "login": "testuser",
+      "id": 1
+    },
+    "body": "This PR fixes the issue described in #1.",
+    "head": {
+      "label": "testuser:feature/fix-bug",
+      "ref": "feature/fix-bug",
+      "sha": "abcdef123456",
+      "user": {
+        "login": "testuser"
+      },
+      "repo": {
+        "id": 1,
+        "name": "repo",
+        "full_name": "test/repo"
+      }
+    },
+    "base": {
+      "label": "test:main",
+      "ref": "main",
+      "sha": "123456abcdef",
+      "user": {
+        "login": "test"
+      },
+      "repo": {
+        "id": 1,
+        "name": "repo",
+        "full_name": "test/repo"
+      }
+    }
+  },
+  "repository": {
+    "id": 1,
+    "name": "repo",
+    "full_name": "test/repo",
+    "owner": {
+      "login": "test",
+      "id": 1
+    }
+  }
+}

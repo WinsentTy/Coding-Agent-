@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "coding-agents"
+version = "0.1.0"
+description = "A system of AI agents for coding and code review."
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [
+    {include = "code_agent", from = "src"},
+    {include = "reviewer_agent", from = "src"},
+    {include = "shared", from = "src"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+PyGithub = "^2.1.1"
+GitPython = "^3.1.40"
+openai = "^1.6.1"
+pydantic = "^2.5.3"
+requests = "^2.31.0"
+ruff = "^0.1.9"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.9"
+black = "^23.12.1"
+mypy = "^1.8.0"
+pytest = "^7.4.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = ["E", "F", "S"]
+ignore = ["S101", "S603"] # Allow asserts (S101) in tests andsubprocess (S603) as we handle it carefully
+
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
+]

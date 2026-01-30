@@ -1,0 +1,52 @@
+name: AI Code Agent
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  process-issue:
+    if: github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'agent')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout agent code
+        uses: actions/checkout@v4
+
+      - name: Run Code Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: |
+          docker build -t code-agent .
+          docker run --rm \
+            -e GITHUB_TOKEN=$GITHUB_TOKEN \
+            -e LLM_API_KEY=$LLM_API_KEY \
+            -e LLM_BASE_URL=$LLM_BASE_URL \
+            -e LLM_MODEL=$LLM_MODEL \
+            code-agent python -m code_agent.main --repo ${{ github.repository }} --issue-id ${{ github.event.issue.number }}
+
+  process-feedback:
+    if: github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/fix')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout agent code
+        uses: actions/checkout@v4
+
+      - name: Run Reviewer Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: |
+          docker build -t code-agent .
+          docker run --rm \
+            -e GITHUB_TOKEN=$GITHUB_TOKEN \
+            -e LLM_API_KEY=$LLM_API_KEY \
+            -e LLM_BASE_URL=$LLM_BASE_URL \
+            -e LLM_MODEL=$LLM_MODEL \
+            code-agent python -m code_agent.main --repo ${{ github.repository }} --pr-number ${{ github.event.issue.number }}
